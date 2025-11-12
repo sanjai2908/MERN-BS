@@ -13,10 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ✅ Fix: CORS configuration for both local + Vercel
+// ✅ Fix: Allow both local and deployed frontend
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://mern-bs-frontend.vercel.app",
+  "https://mern-bs-frontend-e98m.vercel.app", // your Vercel site
 ];
 
 app.use(
@@ -25,8 +25,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.error("❌ Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("CORS not allowed for this origin"));
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -44,7 +43,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/books", bookRoutes);
 
-// ✅ Error handlers
+// ✅ Error Handlers
 app.use(notFound);
 app.use(errorHandler);
 
